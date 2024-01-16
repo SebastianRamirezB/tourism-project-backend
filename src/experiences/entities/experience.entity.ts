@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Experience {
@@ -9,6 +9,9 @@ export class Experience {
     unique: true,
   })
   title: string;
+
+  @Column('text')
+  email: string;
 
   @Column('text')
   description: string;
@@ -23,10 +26,10 @@ export class Experience {
   })
   review: number;
 
-  @Column('int')
+  @Column('bigint')
   tel: number;
 
-  @Column('int')
+  @Column('bigint')
   whatsappNumber: number;
 
   @Column('text')
@@ -49,4 +52,17 @@ export class Experience {
 
   @Column('text')
   twitterTag: string;
+
+  @BeforeInsert()
+  checkSlugInsert() {
+    if (!this.slug) {
+      this.slug = this.title;
+    }
+
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
 }
