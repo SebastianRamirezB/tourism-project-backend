@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ExperiencesService } from './experiences.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('experiences')
 export class ExperiencesController {
@@ -21,25 +24,25 @@ export class ExperiencesController {
   }
 
   @Get()
-  findAll() {
-    return this.experiencesService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.experiencesService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.experiencesService.findOne(+id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.experiencesService.findOne(term);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateExperienceDto: UpdateExperienceDto,
   ) {
-    return this.experiencesService.update(+id, updateExperienceDto);
+    return this.experiencesService.update(id, updateExperienceDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.experiencesService.remove(+id);
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.experiencesService.remove(id);
   }
 }

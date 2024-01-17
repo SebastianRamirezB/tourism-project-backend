@@ -1,4 +1,10 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Experience {
@@ -59,6 +65,15 @@ export class Experience {
       this.slug = this.title;
     }
 
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  @BeforeUpdate()
+  checkSlugUpdate() {
     this.slug = this.slug
       .toLowerCase()
       .replaceAll(' ', '_')

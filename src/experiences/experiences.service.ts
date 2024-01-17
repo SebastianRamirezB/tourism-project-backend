@@ -3,12 +3,16 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
-import { CreateExperienceDto } from './dto/create-experience.dto';
-import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid';
+
+import { CreateExperienceDto } from './dto/create-experience.dto';
+import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { Experience } from './entities/experience.entity';
+import { PaginationDto } from '../common/dtos/pagination.dto';
 
 @Injectable()
 export class ExperiencesService {
@@ -30,20 +34,60 @@ export class ExperiencesService {
     }
   }
 
-  findAll() {
-    return `This action returns all experiences`;
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+    try {
+      const experiences = await this.experienceRepository.find({
+        take: limit,
+        skip: offset,
+      });
+      return experiences;
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} experience`;
+  async findOne(term: string) {
+    let experience: Experience;
+    if (isUUID(term)) {
+      experience = await this.experienceRepository.findOneBy({ id: term });
+    } else {
+      const queryBuilder = this.experienceRepository.createQueryBuilder();
+      experience = await queryBuilder
+        .where('LOWER(title) =:title or slug =:slug', {
+          title: term.toLowerCase(),
+          slug: term.toLowerCase(),
+        })
+        .getOne();
+    }
+
+    if (!experience) {
+      throw new NotFoundException(`Experience with ${term} not found`);
+    }
+    return experience;
   }
 
-  update(id: number, updateExperienceDto: UpdateExperienceDto) {
-    return `This action updates a #${id} experience`;
+  async update(id: string, updateExperienceDto: UpdateExperienceDto) {
+    const experience = await this.experienceRepository.preload({
+      id: id,
+      ...updateExperienceDto,
+    });
+
+    if (!experience) {
+      throw new NotFoundException(`Product with id: ${id} not found`);
+    }
+
+    try {
+      await this.experienceRepository.save(experience);
+      return experience;
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} experience`;
+  async remove(id: string) {
+    const experience = await this.findOne(id);
+    await this.experienceRepository.remove(experience);
   }
 
   private handleDBExceptions(error: any) {
