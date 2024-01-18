@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Post,
   UploadedFile,
@@ -21,10 +20,6 @@ export class FilesController {
     }),
   )
   uploadExperienceImage(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      throw new BadRequestException('Make sure that the file is an image');
-    }
-
-    return { fileName: file.originalname };
+    return this.filesService.uploadImage(file);
   }
 }
