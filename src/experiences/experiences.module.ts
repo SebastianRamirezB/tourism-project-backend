@@ -9,6 +9,5 @@ import { ExperienceImage } from './entities/experience-image.entity';
   controllers: [ExperiencesController],
   providers: [ExperiencesService],
   imports: [TypeOrmModule.forFeature([Experience, ExperienceImage])],
-  exports: [ExperiencesService, TypeOrmModule],
 })
 export class ExperiencesModule {}

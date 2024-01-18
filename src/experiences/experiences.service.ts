@@ -148,14 +148,4 @@ export class ExperiencesService {
       'Unexpected error, check server logs',
     );
   }
-
-  async deletAllExperiences() {
-    const query = this.experienceRepository.createQueryBuilder('experience');
-
-    try {
-      return await query.delete().where({}).execute();
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
-  }
 }
