@@ -30,7 +30,7 @@ export class ExperiencesController {
 
   @Get(':term')
   findOne(@Param('term') term: string) {
-    return this.experiencesService.findOne(term);
+    return this.experiencesService.findOnePlain(term);
   }
 
   @Patch(':id')

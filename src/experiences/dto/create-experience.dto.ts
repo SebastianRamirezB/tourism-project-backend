@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEmail,
   IsNumber,
   IsOptional,
@@ -66,4 +67,9 @@ export class CreateExperienceDto {
   @IsString()
   @IsOptional()
   twitterTag?: string;
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  images?: string[];
 }

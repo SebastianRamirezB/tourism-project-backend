@@ -3,8 +3,10 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ExperienceImage } from './experience-image.entity';
 
 @Entity()
 export class Experience {
@@ -58,6 +60,13 @@ export class Experience {
 
   @Column('text')
   twitterTag: string;
+
+  @OneToMany(
+    () => ExperienceImage,
+    (experienceImage) => experienceImage.experience,
+    { cascade: true, eager: true },
+  )
+  images?: ExperienceImage[];
 
   @BeforeInsert()
   checkSlugInsert() {
