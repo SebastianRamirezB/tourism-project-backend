@@ -3,10 +3,12 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ExperienceImage } from './experience-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Entity()
 export class Experience {
@@ -67,6 +69,9 @@ export class Experience {
     { cascade: true, eager: true },
   )
   images?: ExperienceImage[];
+
+  @ManyToOne(() => User, (user) => user.experience, { eager: true })
+  user: User;
 
   @BeforeInsert()
   checkSlugInsert() {

@@ -14,6 +14,7 @@ import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { Experience } from './entities/experience.entity';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { ExperienceImage } from './entities/experience-image.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ExperiencesService {
@@ -29,7 +30,7 @@ export class ExperiencesService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async create(createExperienceDto: CreateExperienceDto) {
+  async create(createExperienceDto: CreateExperienceDto, user: User) {
     try {
       const { images = [], ...experienceDetails } = createExperienceDto;
       const experience = this.experienceRepository.create({
@@ -37,6 +38,7 @@ export class ExperiencesService {
         images: images.map((image) =>
           this.experienceImageRepository.create({ url: image }),
         ),
+        user,
       });
       await this.experienceRepository.save(experience);
 
@@ -94,7 +96,11 @@ export class ExperiencesService {
     };
   }
 
-  async update(id: string, updateExperienceDto: UpdateExperienceDto) {
+  async update(
+    id: string,
+    updateExperienceDto: UpdateExperienceDto,
+    user: User,
+  ) {
     const { images, ...toUpdate } = updateExperienceDto;
 
     const experience = await this.experienceRepository.preload({
@@ -119,7 +125,7 @@ export class ExperiencesService {
           this.experienceImageRepository.create({ url: image }),
         );
       }
-
+      experience.user = user;
       await queryRunner.manager.save(experience);
 
       // await this.experienceRepository.save(experience);
