@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsNumber,
   IsOptional,
@@ -67,6 +68,24 @@ export class CreateExperienceDto {
   @IsString()
   @IsOptional()
   twitterTag?: string;
+
+  @IsBoolean()
+  food: boolean;
+
+  @IsBoolean()
+  transport: boolean;
+
+  @IsBoolean()
+  drinks: boolean;
+
+  @IsBoolean()
+  equipment: boolean;
+
+  @IsBoolean()
+  tickets: boolean;
+
+  @IsBoolean()
+  sure: boolean;
 
   @IsString({ each: true })
   @IsArray()

@@ -63,6 +63,36 @@ export class Experience {
   @Column('text')
   twitterTag: string;
 
+  @Column('bool', {
+    default: false,
+  })
+  food: boolean;
+
+  @Column('bool', {
+    default: false,
+  })
+  transport: boolean;
+
+  @Column('bool', {
+    default: false,
+  })
+  drinks: boolean;
+
+  @Column('bool', {
+    default: false,
+  })
+  equipment: boolean;
+
+  @Column('bool', {
+    default: false,
+  })
+  tickets: boolean;
+
+  @Column('bool', {
+    default: false,
+  })
+  sure: boolean;
+
   @OneToMany(
     () => ExperienceImage,
     (experienceImage) => experienceImage.experience,
