@@ -27,27 +27,29 @@ export class CreateExperienceDto {
   @IsOptional()
   review?: number;
 
-  @IsNumber()
-  @IsPositive()
-  tel: number;
+  @IsString()
+  tel: string;
 
   @IsString()
   @MinLength(1)
   @IsEmail()
   email: string;
 
-  @IsNumber()
-  @IsPositive()
+  @IsString()
   @IsOptional()
-  whatsappNumber?: number;
+  whatsappNumber?: string;
 
   @IsString()
-  @MinLength(1)
+  @IsOptional()
   category: string;
 
   @IsString()
   @MinLength(1)
   country: string;
+
+  @IsString()
+  @MinLength(1)
+  department: string;
 
   @IsString()
   @MinLength(1)

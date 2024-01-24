@@ -36,17 +36,24 @@ export class Experience {
   })
   review: number;
 
-  @Column('bigint')
-  tel: number;
-
-  @Column('bigint')
-  whatsappNumber: number;
+  @Column('text')
+  tel: string;
 
   @Column('text')
+  whatsappNumber: string;
+
+  @Column('text', {
+    default: 'otro',
+  })
   category: string;
 
   @Column('text')
   country: string;
+
+  @Column('text', {
+    default: 'Caldas',
+  })
+  department: string;
 
   @Column('text')
   town: string;
