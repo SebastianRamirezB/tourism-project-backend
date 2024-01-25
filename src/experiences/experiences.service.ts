@@ -49,7 +49,7 @@ export class ExperiencesService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = 100, offset = 0 } = paginationDto;
     try {
       const experiences = await this.experienceRepository.find({
         take: limit,
